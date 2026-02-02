@@ -9,7 +9,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "MiniTaskManager\\Backend\\": "app/"
+            "App\\": "app/"
         }
     },
     "authors": [
@@ -18,6 +18,5 @@
             "email": "robalex123@outlook.es"
         }
     ],
-    "minimum-stability": "stable",
-    "require": {}
+    "minimum-stability": "stable"
 }
