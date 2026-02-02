@@ -33,7 +33,10 @@ CREATE OR REPLACE FUNCTION api.get_user_auth(p_email TEXT)
 RETURNS TABLE(user_id BIGINT, email TEXT, password_hash TEXT)
 LANGUAGE sql
 AS $$
-  SELECT id, email, password_hash
+  SELECT
+    id AS user_id,
+    email::text,
+    password_hash::text
   FROM public.users
   WHERE email = lower(btrim(p_email))
   LIMIT 1;
@@ -42,6 +45,7 @@ $$;
 
 -- ===== TASKS =====
 
+-- Lista tareas del usuario (opcional filtra por status)
 CREATE OR REPLACE FUNCTION api.list_tasks(p_user_id BIGINT, p_status TEXT DEFAULT NULL)
 RETURNS TABLE(id BIGINT, title TEXT, description TEXT, status TEXT, created_at TIMESTAMP, updated_at TIMESTAMP)
 LANGUAGE plpgsql
@@ -49,7 +53,13 @@ AS $$
 BEGIN
   IF p_status IS NULL OR btrim(p_status) = '' THEN
     RETURN QUERY
-      SELECT t.id, t.title, t.description, t.status, t.created_at, t.updated_at
+      SELECT
+        t.id,
+        t.title::text,
+        t.description::text,
+        t.status::text,
+        t.created_at,
+        t.updated_at
       FROM public.tasks t
       WHERE t.user_id = p_user_id
       ORDER BY t.id DESC;
@@ -60,7 +70,13 @@ BEGIN
     END IF;
 
     RETURN QUERY
-      SELECT t.id, t.title, t.description, t.status, t.created_at, t.updated_at
+      SELECT
+        t.id,
+        t.title::text,
+        t.description::text,
+        t.status::text,
+        t.created_at,
+        t.updated_at
       FROM public.tasks t
       WHERE t.user_id = p_user_id AND t.status = p_status
       ORDER BY t.id DESC;
@@ -69,6 +85,7 @@ END;
 $$;
 
 
+-- Crea tarea
 CREATE OR REPLACE FUNCTION api.create_task(
   p_user_id BIGINT,
   p_title TEXT,
@@ -94,13 +111,20 @@ BEGIN
   RETURNING public.tasks.id INTO v_id;
 
   RETURN QUERY
-    SELECT t.id, t.title, t.description, t.status, t.created_at, t.updated_at
+    SELECT
+      t.id,
+      t.title::text,
+      t.description::text,
+      t.status::text,
+      t.created_at,
+      t.updated_at
     FROM public.tasks t
     WHERE t.id = v_id;
 END;
 $$;
 
 
+-- Actualiza tarea (solo si pertenece al usuario)
 CREATE OR REPLACE FUNCTION api.update_task(
   p_user_id BIGINT,
   p_task_id BIGINT,
@@ -128,7 +152,13 @@ BEGIN
   END IF;
 
   RETURN QUERY
-    SELECT t.id, t.title, t.description, t.status, t.created_at, t.updated_at
+    SELECT
+      t.id,
+      t.title::text,
+      t.description::text,
+      t.status::text,
+      t.created_at,
+      t.updated_at
     FROM public.tasks t
     WHERE t.id = p_task_id;
 END;
