@@ -63,7 +63,7 @@ JWT_TTL_MINUTES=60
 Generar un JWT_SECRET seguro
 
 ```bash
-php -r ‘echo bin2hex(random_bytes(32)) . PHP_EOL;’
+php -r 'echo bin2hex(random_bytes(32)) . PHP_EOL;'
 ```
 
 Copia el valor generado en JWT_SECRET.
@@ -115,7 +115,7 @@ Register
 ```bash
 curl -s -X POST http://localhost:8000/api/register 
 -H "Content-Type: application/json" 
--d ‘{"email":"test@example.com","password":"123456"}’
+-d '{"email":"test@example.com","password":"123456"}'
 ```
 
 Login
@@ -123,7 +123,7 @@ Login
 ```bash
 curl -s -X POST http://localhost:8000/api/login 
 -H "Content-Type: application/json" 
--d ‘{"email":"test@example.com","password":"123456"}’
+-d '{"email":"test@example.com","password":"123456"}'
 ```
 
 Guarda el token:
@@ -149,7 +149,7 @@ Crear tarea
 curl -s -X POST http://localhost:8000/api/tasks 
 -H "Content-Type: application/json" 
 -H "Authorization: Bearer $TOKEN" 
--d ‘{"title":"Primera tarea","description":"demo","status":"pending"}’
+-d '{"title":"Primera tarea","description":"demo","status":"pending"}'
 ```
 
 Actualizar tarea (ejemplo id=1)
@@ -158,7 +158,7 @@ Actualizar tarea (ejemplo id=1)
 curl -s -X PUT http://localhost:8000/api/tasks/1 
 -H "Content-Type: application/json" 
 -H "Authorization: Bearer $TOKEN" 
--d ‘{"status":"in_progress"}’
+-d '{"status":"in_progress"}'
 ```
 
 ---

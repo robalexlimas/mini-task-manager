@@ -10,6 +10,17 @@ use Phalcon\Http\Response;
 
 use App\Middleware\ErrorHandler;
 
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '*';
+header("Access-Control-Allow-Origin: $origin");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+header("Access-Control-Allow-Credentials: true");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 $root = dirname(__DIR__);
 
 // Load env
@@ -19,6 +30,16 @@ if (file_exists($root . '/.env')) {
 
 // DI
 $di = new FactoryDefault();
+
+// Inyectar cabeceras en el servicio de respuesta global
+$di->setShared('response', function() use ($origin) {
+    $response = new Response();
+    $response->setHeader('Access-Control-Allow-Origin', $origin);
+    $response->setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    $response->setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    $response->setHeader('Access-Control-Allow-Credentials', 'true');
+    return $response;
+});
 
 // Config
 $config = require $root . '/app/config/config.php';
