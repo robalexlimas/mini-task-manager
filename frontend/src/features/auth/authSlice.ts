@@ -13,10 +13,11 @@ export type AuthState = {
 };
 
 const token = localStorage.getItem("token");
+const user = localStorage.getItem("user");
 
 const initialState: AuthState = {
   token: token || null,
-  user: null,
+  user: user ? JSON.parse(user) : null,
   status: "idle",
   error: null,
 };
@@ -53,6 +54,7 @@ const authSlice = createSlice({
       state.status = "idle";
       state.error = null;
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
     },
     setUser(state, action: PayloadAction<User | null>) {
       state.user = action.payload;
@@ -70,6 +72,7 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.user = action.payload.user;
         localStorage.setItem("token", action.payload.token);
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(register.rejected, (state, action) => {
         state.status = "failed";
@@ -86,6 +89,7 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.user = action.payload.user;
         localStorage.setItem("token", action.payload.token);
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";

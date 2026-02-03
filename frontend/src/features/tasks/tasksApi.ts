@@ -24,18 +24,18 @@ export type UpdateTaskInput = {
 };
 
 export async function listTasksRequest(status?: TaskStatus) {
-    const { data } = await api.get<Task[]>("/api/tasks", {
+    const { data: { tasks } } = await api.get<{ tasks: Task[] }>("/api/tasks", {
         params: status ? { status } : undefined,
     });
-    return data;
+    return tasks;
 }
 
 export async function createTaskRequest(input: CreateTaskInput) {
-    const { data } = await api.post<Task>("/api/tasks", input);
-    return data;
+    const { data: { task } } = await api.post<{ task: Task }>("/api/tasks", input);
+    return task;
 }
 
 export async function updateTaskRequest(taskId: number, input: UpdateTaskInput) {
-    const { data } = await api.put<Task>(`/api/tasks/${taskId}`, input);
-    return data;
+    const { data: { task } } = await api.put<{ task: Task }>(`/api/tasks/${taskId}`, input);
+    return task;
 }
